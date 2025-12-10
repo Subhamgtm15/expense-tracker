@@ -88,7 +88,7 @@ export default function Main() {
     return (
         <main className=" bg-gray-100 flex flex-col items-center p-4 sm:p-6 gap-6">
 
-            <h1 className="font-bold text-2xl sm:text-3xl">Finance Tracker</h1>
+            <h1 className="font-bold text-2xl sm:text-3xl">Expense Tracker</h1>
 
             {/* Summary Section */}
             <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-4xl">
