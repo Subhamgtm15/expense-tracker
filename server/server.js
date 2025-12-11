@@ -31,8 +31,8 @@ app.get('/api/transactions', async (req, res) => {
 //post transactions
 
 app.post('/api/transactions', async (req, res) => {
-    const { amount, type, description } = req.body;
-    const newTransaction = { amount: amount, type: type, description: description, date: new Date() }
+    const { amount, type,category, description } = req.body;
+    const newTransaction = { amount: amount, type: type,category:category, description: description, date: new Date() }
     try {
         const db = getDB();
         const result = await db.collection('transactions').insertOne(newTransaction);
@@ -63,12 +63,12 @@ app.delete('/api/transactions/:id', async (req, res) => {
 //update transactions
 app.put('/api/transactions/:id', async (req, res) => {
     const id = req.params.id
-    const { amount, type, description } = req.body;
+    const { amount, type,category, description } = req.body;
     try {
         const db = getDB();
         const result = await db.collection('transactions').updateOne(
             { _id: new ObjectId(id) },
-            { $set: { amount: amount, type: type, description: description, } }
+            { $set: { amount: amount, type: type,category:category, description: description, } }
         );
         if (result.matchedCount === 0) {
             return res.status(404).json({ error: 'Transaction not found' });
@@ -76,7 +76,7 @@ app.put('/api/transactions/:id', async (req, res) => {
 
         return res.status(200).json({
             message: 'Transaction updated successfully',
-            updated: { id, amount, type, description }
+            updated: { id, amount, type,category, description }
         });
     } catch {
         res.status(500).json({ error: 'failed to update' })
