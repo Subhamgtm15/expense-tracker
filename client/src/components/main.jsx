@@ -11,15 +11,22 @@ export default function Main() {
     const [category, setCategory] = useState('Food')
     const categories = ['Food', 'Rent', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Other'];
 
+    const token = localStorage.getItem('token');
+
+    //get
     useEffect(() => {
-        fetch('http://localhost:5000/api/transactions')
+        fetch('http://localhost:5000/api/transactions', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
             .then(res => res.json())
             .then(data => setTransaction(data));
     }, []);
 
     async function submitTransaction(e) {
         e.preventDefault();
-        if (!amount || !category || !type) {
+        if (!amount || !category || !type || !description) {
             alert("All fields are required!");
             return;
         }
@@ -27,7 +34,10 @@ export default function Main() {
         if (!editingId) {
             const res = await fetch('http://localhost:5000/api/transactions', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ amount: parseFloat(amount), type: type, category: category, description: description })
             });
             const transaction = await res.json();
@@ -35,7 +45,10 @@ export default function Main() {
         } else {
             const res = await fetch(`http://localhost:5000/api/transactions/${editingId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({ amount: parseFloat(amount), type: type, description: description })
             });
             const updatedTransaction = await res.json();
@@ -65,6 +78,9 @@ export default function Main() {
     async function removeTransaction(id) {
         const res = await fetch(`http://localhost:5000/api/transactions/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
         // const deletedTransaction=await res.json();
         // const Tid=deletedTransaction.id;
@@ -185,7 +201,7 @@ export default function Main() {
 
             </div>
             <div className="w-full">
-                 <Piecharts transaction={transaction}/>
+                <Piecharts transaction={transaction} />
             </div>
         </main>
 

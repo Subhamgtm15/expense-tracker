@@ -8,6 +8,10 @@
     "install-all": "npm install && cd server && npm install && cd ../client && npm install"
   },
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "bcrypt": "^6.0.0",
+    "concurrently": "^8.2.2",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
   }
 }
