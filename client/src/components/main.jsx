@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import Piecharts from "./Piecharts";
 import Summary from "./summary";
-export default function Main() {
+export default function Main({ onLogout }) {
     console.log('rendered');
     const [transaction, setTransaction] = useState([]);
     const [amount, setAmount] = useState('10');
@@ -13,6 +13,13 @@ export default function Main() {
 
     const token = localStorage.getItem('token');
 
+    function handleAuthFail(res) {
+        if (res.status === 401 || res.status === 403) {
+            onLogout();
+            return true;
+        }
+        return false;
+    }
     //get
     useEffect(() => {
         fetch('http://localhost:5000/api/transactions', {
@@ -20,8 +27,15 @@ export default function Main() {
                 'Authorization': `Bearer ${token}`
             }
         })
-            .then(res => res.json())
-            .then(data => setTransaction(data));
+            .then(res => {
+                if (handleAuthFail(res)) return null;
+                return res.json();
+            })
+            .then(data => {
+                if (data) {
+                    setTransaction(data)
+                }
+            });
     }, []);
 
     async function submitTransaction(e) {
@@ -40,8 +54,9 @@ export default function Main() {
                 },
                 body: JSON.stringify({ amount: parseFloat(amount), type: type, category: category, description: description })
             });
-            const transaction = await res.json();
-            setTransaction(prev => [...prev, transaction.transaction]);
+            if (handleAuthFail(res)) return;
+            const data = await res.json();
+            setTransaction(prev => [...prev, data.transaction]);
         } else {
             const res = await fetch(`http://localhost:5000/api/transactions/${editingId}`, {
                 method: 'PUT',
@@ -51,9 +66,9 @@ export default function Main() {
                 },
                 body: JSON.stringify({ amount: parseFloat(amount), type: type, description: description })
             });
-            const updatedTransaction = await res.json();
-            const updatedArray = transaction.map((t => t._id === editingId ? updatedTransaction.updated : t))
-            setTransaction(updatedArray)
+            if (handleAuthFail(res)) return;
+            const data = await res.json();
+            setTransaction(transaction.map(t => t._id === editingId ? data.updated : t));
             setEditingId(null);
         }
 
@@ -84,7 +99,8 @@ export default function Main() {
         });
         // const deletedTransaction=await res.json();
         // const Tid=deletedTransaction.id;
-        setTransaction(prev => prev.filter(t => t._id !== id))
+        if (handleAuthFail(res)) return;
+        setTransaction(prev => prev.filter(t => t._id !== id));
     }
 
 
@@ -101,8 +117,13 @@ export default function Main() {
 
     return (
         <main className=" bg-gray-100 flex flex-col items-center p-4 sm:p-6 gap-6">
+            <div className="flex justify-center items-center relative w-full">
+                <h1 className="font-bold text-2xl sm:text-3xl">Expense Tracker</h1>
+                <button onClick={onLogout} className="absolute right-4 text-sm sm:text-base px-4 py-2 font-semibold text-white bg-red-500 rounded-xl hover:bg-red-600 active:scale-95 transition-all duration-200shadow-lg">
+                    Logout
+                </button>
+            </div>
 
-            <h1 className="font-bold text-2xl sm:text-3xl">Expense Tracker</h1>
             {/*summary section */}
             <Summary transaction={transaction} />
 

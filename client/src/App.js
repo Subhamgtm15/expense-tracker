@@ -17,12 +17,16 @@ function App() {
     setScreenState('main')
   }
 
+  function logout(){
+    localStorage.removeItem('token');
+    setScreenState('login');
+  }
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className=" p-8 rounded-lg shadow-lg">
         {(screenState === 'login') && <Login gotoSignUp={gotoSignUp} gotoMain={gotoMain} />}
         {(screenState === 'signup') && <Signup gotoLogin={gotoLogin} />}
-        {(screenState === 'main') && <Main />}
+        {(screenState === 'main') && <Main onLogout={logout}/>}
       </div>
     </div>
   );
