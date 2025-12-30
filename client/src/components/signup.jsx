@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export default function Signup({ gotoLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -27,7 +29,7 @@ export default function Signup({ gotoLogin }) {
 
       setUsername("");
       setPassword("");
-      gotoLogin();
+      navigate('/login')
     } catch (err) {
       setError("Server not reachable. Please try again.");
     } finally {
@@ -77,7 +79,7 @@ export default function Signup({ gotoLogin }) {
 
         <button
           type="button"
-          onClick={gotoLogin}
+          onClick={()=>{navigate('/login')}}
           className="text-center text-sm text-gray-600 hover:underline w-full"
         >
           Already have an account? Login

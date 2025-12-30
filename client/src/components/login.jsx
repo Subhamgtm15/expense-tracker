@@ -1,10 +1,12 @@
 import { useState } from "react";
-
-export default function Login({ gotoSignUp, gotoMain }) {
+import { useNavigate } from 'react-router-dom';
+export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -25,7 +27,9 @@ export default function Login({ gotoSignUp, gotoMain }) {
                 return;
             }
             localStorage.setItem("token", data.accessToken);
-            gotoMain();
+   console.log("Token saved:", localStorage.getItem("token"));
+   navigate('/');
+   console.log("Navigate called to /");
             setUsername("");
             setPassword("");
         } catch (err) {
@@ -76,7 +80,7 @@ export default function Login({ gotoSignUp, gotoMain }) {
 
                 <button
                     type="button"
-                    onClick={gotoSignUp}
+                    onClick={()=>{navigate('/signup')}}
                     className="text-center text-sm text-gray-600 hover:underline w-full"
                 >
                     Don’t have an account? Sign up
