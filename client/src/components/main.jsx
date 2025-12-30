@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import Piecharts from "./Piecharts";
 import Summary from "./summary";
+import { apiRequest } from "../api/api";
 export default function Main({ onLogout }) {
     console.log('rendered');
     const [transaction, setTransaction] = useState([]);
@@ -11,32 +12,16 @@ export default function Main({ onLogout }) {
     const [category, setCategory] = useState('Food')
     const categories = ['Food', 'Rent', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Other'];
 
-    const token = localStorage.getItem('token');
-
-    function handleAuthFail(res) {
-        if (res.status === 401 || res.status === 403) {
-            onLogout();
-            return true;
-        }
-        return false;
-    }
-    //get
+    //get 
     useEffect(() => {
-        fetch('http://localhost:5000/api/transactions', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(res => {
-                if (handleAuthFail(res)) return null;
-                return res.json();
-            })
+        apiRequest("GET", "/api/transactions", null, onLogout)
             .then(data => {
                 if (data) {
-                    setTransaction(data)
+                    setTransaction(data);
                 }
             });
     }, []);
+
 
     async function submitTransaction(e) {
         e.preventDefault();
@@ -44,30 +29,24 @@ export default function Main({ onLogout }) {
             alert("All fields are required!");
             return;
         }
+        // const res = await fetch('http://localhost:5000/api/transactions', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': `Bearer ${token}`
+        //         },
+        //         body: JSON.stringify({ amount: parseFloat(amount), type: type, category: category, description: description })
+        //     });
+        //     if (handleAuthFail(res)) return;
+        //     const data = await res.json();
 
         if (!editingId) {
-            const res = await fetch('http://localhost:5000/api/transactions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ amount: parseFloat(amount), type: type, category: category, description: description })
-            });
-            if (handleAuthFail(res)) return;
-            const data = await res.json();
+            const data = await apiRequest("POST", "/api/transactions", { amount: parseFloat(amount), type: type, category: category, description: description }, onLogout);
+
             setTransaction(prev => [...prev, data.transaction]);
         } else {
-            const res = await fetch(`http://localhost:5000/api/transactions/${editingId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ amount: parseFloat(amount), type: type, description: description })
-            });
-            if (handleAuthFail(res)) return;
-            const data = await res.json();
+            const data = await apiRequest("PUT", `/api/transactions/${editingId}`, { amount: parseFloat(amount), type: type, category: category, description: description }, onLogout);
+            
             setTransaction(transaction.map(t => t._id === editingId ? data.updated : t));
             setEditingId(null);
         }
@@ -90,16 +69,13 @@ export default function Main({ onLogout }) {
     function Category(e) {
         setCategory(e.target.value)
     }
+
+    //delete
     async function removeTransaction(id) {
-        const res = await fetch(`http://localhost:5000/api/transactions/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        apiRequest("DELETE", `/api/transactions/${id}`, null, onLogout)
         // const deletedTransaction=await res.json();
         // const Tid=deletedTransaction.id;
-        if (handleAuthFail(res)) return;
+
         setTransaction(prev => prev.filter(t => t._id !== id));
     }
 
