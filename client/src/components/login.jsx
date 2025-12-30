@@ -27,9 +27,9 @@ export default function Login() {
                 return;
             }
             localStorage.setItem("token", data.accessToken);
-   console.log("Token saved:", localStorage.getItem("token"));
-   navigate('/');
-   console.log("Navigate called to /");
+            console.log("Token saved:", localStorage.getItem("token"));
+            navigate('/');
+            console.log("Navigate called to /");
             setUsername("");
             setPassword("");
         } catch (err) {
@@ -80,7 +80,7 @@ export default function Login() {
 
                 <button
                     type="button"
-                    onClick={()=>{navigate('/signup')}}
+                    onClick={() => { navigate('/signup') }}
                     className="text-center text-sm text-gray-600 hover:underline w-full"
                 >
                     Don’t have an account? Sign up
