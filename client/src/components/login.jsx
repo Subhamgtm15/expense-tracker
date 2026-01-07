@@ -27,9 +27,7 @@ export default function Login() {
                 return;
             }
             localStorage.setItem("token", data.accessToken);
-            console.log("Token saved:", localStorage.getItem("token"));
             navigate('/');
-            console.log("Navigate called to /");
             setUsername("");
             setPassword("");
         } catch (err) {

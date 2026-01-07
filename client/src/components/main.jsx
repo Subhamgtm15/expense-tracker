@@ -12,6 +12,18 @@ export default function Main({ onLogout }) {
     const [category, setCategory] = useState('Food')
     const categories = ['Food', 'Rent', 'Transport', 'Entertainment', 'Bills', 'Shopping', 'Other'];
 
+    //get username from token
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    let token = localStorage.getItem('token');
+
+    let username = "User";
+
+    if (token) {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        username = payload.username;
+    }
+
     //get 
     useEffect(() => {
         apiRequest("GET", "/api/transactions", null, onLogout)
@@ -46,7 +58,7 @@ export default function Main({ onLogout }) {
             setTransaction(prev => [...prev, data.transaction]);
         } else {
             const data = await apiRequest("PUT", `/api/transactions/${editingId}`, { amount: parseFloat(amount), type: type, category: category, description: description }, onLogout);
-            
+
             setTransaction(transaction.map(t => t._id === editingId ? data.updated : t));
             setEditingId(null);
         }
@@ -93,12 +105,36 @@ export default function Main({ onLogout }) {
 
     return (
         <main className=" bg-gray-100 flex flex-col items-center p-4 sm:p-6 gap-6">
-            <div className="flex justify-center items-center relative w-full">
+            <div className="flex justify-between items-center relative w-full">
                 <h1 className="font-bold text-2xl sm:text-3xl">Expense Tracker</h1>
-                <button onClick={onLogout} className="absolute right-4 text-sm sm:text-base px-4 py-2 font-semibold text-white bg-red-500 rounded-xl hover:bg-red-600 active:scale-95 transition-all duration-200shadow-lg">
-                    Logout
-                </button>
+
+                <div className="relative">
+                    {/* Avatar button */}
+                    <button
+                        onClick={() => setMenuOpen(prev => !prev)}
+                        className="w-10 h-10 rounded-full bg-blue-500 text-white font-bold flex items-center justify-center"
+                    >
+                        {username?.[0]?.toUpperCase() || "U"}
+                    </button>
+
+                    {/* Dropdown */}
+                    {menuOpen && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg p-3 z-50">
+                            <p className="text-sm text-gray-600 mb-2">
+                                <span className="font-semibold">{username}</span>
+                            </p>
+
+                            <button
+                                onClick={onLogout}
+                                className="w-full text-left text-red-500 hover:bg-red-50 px-2 py-1 rounded-lg"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
+
 
             {/*summary section */}
             <Summary transaction={transaction} />

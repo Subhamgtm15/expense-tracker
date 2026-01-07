@@ -16,7 +16,7 @@ app.use(express.json());
 connectDB();
 
 
-//registe username
+//register username
 
 router.post('/register', async (req, res) => {
     try {
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Password didn’t match' });
         }
 
-        const accessToken = jwt.sign({ id: userExist._id},process.env.JWT_SECRET);
+        const accessToken = jwt.sign({ id: userExist._id,username:userExist.username},process.env.JWT_SECRET,{ expiresIn: "2h" });
         console.log(accessToken);  //accesstoken has 3 parts, header,payload and signature
 
         res.status(200).json({ message: 'Login successful', accessToken });
