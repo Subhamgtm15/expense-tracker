@@ -6,7 +6,7 @@ A full-stack expense tracker that lets users securely manage income and expenses
 
 ## 🚀 Live Demo
 
-- **Frontend:** https://YOUR-FRONTEND.onrender.com
+- **Frontend:** https://expense-tracker-1-bugi.onrender.com/
 - **Backend API:** https://expense-tracker-qtte.onrender.com
 
 ---
