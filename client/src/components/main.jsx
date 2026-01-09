@@ -119,7 +119,7 @@ export default function Main({ onLogout }) {
 
                     {/* Dropdown */}
                     {menuOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg p-3 z-50">
+                        <div className="absolute right-0 mt-0 w-48 bg-white rounded-xl shadow-lg p-3 z-50">
                             <p className="text-sm text-gray-600 mb-2">
                                 <span className="font-semibold">{username}</span>
                             </p>
