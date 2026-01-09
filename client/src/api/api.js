@@ -1,4 +1,6 @@
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const DEFAULT_LOCAL = "http://localhost:5000";
+// In production prefer a relative base (''), otherwise use env var or localhost
+const BASE_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === "production" ? "" : DEFAULT_LOCAL);
 
 /*  Build headers automatically */
 function getAuthHeaders() {

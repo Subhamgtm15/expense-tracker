@@ -1,64 +1,63 @@
 # Expense Tracker
 
-A simple full-stack expense tracker that allows users to securely manage their income and expenses using JWT-based authentication.
+A full-stack expense tracker that lets users securely manage income and expenses using **JWT authentication**.
+
+---
+
+## 🚀 Live Demo
+
+- **Frontend:** https://YOUR-FRONTEND.onrender.com
+- **Backend API:** https://expense-tracker-qtte.onrender.com
 
 ---
 
 ## ✅ Features
 
-- User **Signup & Login**
-- **JWT Authentication** for secure access
-- Add, edit, and delete **Income / Expense** transactions
+- Signup / Login
+- JWT-based authentication
+- Add, edit, delete income & expense transactions
 - Each user can access **only their own data**
-- Auto logout when the session expires or becomes unauthorized
-- Dashboard view with summaries and charts
+- Auto logout on unauthorized/expired sessions
+- Dashboard with summaries and charts
 
 ---
 
-## 🔐 Authentication Flow (JWT)
+## 🔐 Authentication (JWT)
 
-1. User signs up or logs in with username and password  
-2. Server verifies credentials and generates a **JWT token**
-3. Token is stored in the browser (localStorage)
-4. Token is sent with every protected API request
-5. Backend verifies the token before allowing access
-6. If the token is invalid or expired, the user is logged out automatically
-
-This keeps the application **stateless and secure**.
+- Server issues a signed JWT on login
+- Token is stored in `localStorage`
+- Token is sent in `Authorization: Bearer <token>` for protected routes
+- Backend verifies token on every request (stateless auth)
 
 ---
 
-## 🌐 REST API Design
-
-The backend follows REST principles:
+## 🌐 REST API Endpoints
 
 | Method | Endpoint | Description |
 |------|---------|------------|
-| POST | `/api/auth/register` | Register a new user |
+| POST | `/api/auth/register` | Register user |
 | POST | `/api/auth/login` | Login and receive JWT |
-| GET | `/api/transactions` | Get user transactions |
-| POST | `/api/transactions` | Add a transaction |
-| PUT | `/api/transactions/:id` | Update a transaction |
-| DELETE | `/api/transactions/:id` | Delete a transaction |
+| GET | `/api/transactions` | Fetch user transactions |
+| POST | `/api/transactions` | Create transaction |
+| PUT | `/api/transactions/:id` | Update transaction |
+| DELETE | `/api/transactions/:id` | Delete transaction |
 
-All transaction routes are **protected** using JWT middleware.
+All transaction routes are **JWT-protected**.
 
 ---
 
 ## 🧰 Tech Stack
 
-**Frontend:** React, Tailwind CSS  
-**Backend:** Node.js, Express.js  
-**Database:** MongoDB  
-**Authentication:** JSON Web Tokens (JWT)
+- **Frontend:** React, Tailwind CSS
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB Atlas
+- **Deployment:** Render (Static Site + Web Service)
 
 ---
 
-## 📌 Why this project
+## 🧠 What I Learned
 
-This project was built to practice:
 - REST API design
-- Authentication & authorization
-- Secure backend development
-- Frontend–backend integration
-- Real-world application structure
+- JWT authentication & authorization
+- Secure frontend–backend integration
+- Deploying a MERN app with environment variables
